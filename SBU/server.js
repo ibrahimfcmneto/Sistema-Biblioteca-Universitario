@@ -15,7 +15,7 @@ app.use(express.static('Bibliotecario'));
 const db = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'Ib04092006@',      
+    password: 'SENHA BANCO DE DADOS',      
     database: 'biblioteca_puc'
 });
 
