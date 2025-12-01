@@ -3,33 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consulta de Livros - Biblioteca</title>
+  <title>Ranking de Leitores - Biblioteca</title>
   <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Estilos Específicos para o Ranking */
+    .medalha { font-size: 1.2em; margin-right: 5px; }
+    
+    /* Destaque para os Top 3 */
+    .top-1 { background-color: #fff9c4 !important; } /* Ouro claro */
+    .top-2 { background-color: #f5f5f5 !important; } /* Prata clara */
+    .top-3 { background-color: #ffccbc !important; } /* Bronze claro */
+
+    .pontos-destaque {
+        font-weight: bold;
+        color: #004aad;
+        font-size: 1.1em;
+        background: #e8f6f3;
+        padding: 5px 10px;
+        border-radius: 15px;
+    }
+  </style>
 </head>
 <body>
 
   <div class="logo">
-    <img src="logo-puc.png" alt="Logo da Faculdade">
+    <img src="logo-puc.png" alt="Logo PUC">
   </div>
 
   <div class="linha-colorida"></div>
 
-  <div class="cadastro-container">
+  <div class="cadastro-container" style="max-width: 900px;">
 
-    <h1 class="titulo-form">Pontuação de Leitores</h1>
-    <p class="subtitulo">Preencha as informações abaixo para consultar a classificação de leitor de cada aluno.</p>
+    <h1 class="titulo-form">Ranking de Leitores 🏆</h1>
+    <p class="subtitulo">Acompanhe a classificação geral dos alunos baseada na quantidade de livros lidos.</p>
 
-    <form class="form-consulta" action="/consultar" method="post">
+    <div class="tabela-container" style="display: block;">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 80px; text-align: center;">Pos.</th>
+                    <th>Aluno</th>
+                    <th>RA</th>
+                    <th style="text-align: center;">Livros Lidos</th>
+                    <th>Classificação</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-ranking">
+                <tr>
+                    <td colspan="5" style="text-align:center;">Carregando ranking...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-      <div class="grupo">
-        <label for="ra">RA:</label>
-        <input type="text" id="ra" name="ra" placeholder="Digite aqui" required>
-      </div>
+    <br><br>
+    <div style="text-align: center;">
+        <a href="index.html" style="color: #333; text-decoration: none; font-weight: bold;">← Voltar ao Menu</a>
+    </div>
 
-      <button type="submit" class="btn-consultar">Consultar</button>
-
-    </form>
   </div>
+
+  <script>
+    window.onload = function() {
+        fetch('/biblio-ranking')
+            .then(response => response.json())
+            .then(dados => {
+                const tbody = document.getElementById('tabela-ranking');
+                tbody.innerHTML = '';
+
+                if (dados.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="aviso-vazio">Nenhum aluno pontuou ainda.</td></tr>';
+                    return;
+                }
+
+                // Cria as linhas da tabela
+                dados.forEach((aluno, index) => {
+                    const posicao = index + 1;
+                    let classeLinha = '';
+                    let medalha = '';
+
+                    // Define medalhas para os 3 primeiros
+                    if (posicao === 1) { classeLinha = 'top-1'; medalha = '🥇'; }
+                    else if (posicao === 2) { classeLinha = 'top-2'; medalha = '🥈'; }
+                    else if (posicao === 3) { classeLinha = 'top-3'; medalha = '🥉'; }
+
+                    const tr = document.createElement('tr');
+                    if(classeLinha) tr.className = classeLinha;
+
+                    tr.innerHTML = `
+                        <td style="text-align: center; font-weight: bold;">${posicao}º ${medalha}</td>
+                        <td><strong>${aluno.nome}</strong></td>
+                        <td>${aluno.ra}</td>
+                        <td style="text-align: center;">
+                            <span class="pontos-destaque">${aluno.pontos}</span>
+                        </td>
+                        <td>${aluno.nivel}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(erro => {
+                console.error(erro);
+                document.getElementById('tabela-ranking').innerHTML = 
+                    '<tr><td colspan="5" style="color:red; text-align:center;">Erro ao carregar ranking.</td></tr>';
+            });
+    };
+  </script>
 
 </body>
 </html>

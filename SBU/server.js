@@ -427,6 +427,31 @@ app.get('/api-pontos/:ra', (req, res) => {
     });
 });
 
+// --- ROTA DE RANKING (BIBLIOTECÁRIO) ---
+app.get('/biblio-ranking', (req, res) => {
+    // Busca todos os alunos ordenados por pontos (do maior para o menor)
+    const sql = "SELECT * FROM Alunos ORDER BY pontos DESC";
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Erro ao buscar ranking' });
+        }
+
+        // Processa a lista para adicionar o "Nível" (texto) a cada aluno
+        const ranking = results.map(aluno => {
+            return {
+                ra: aluno.ra,
+                nome: aluno.nome,
+                pontos: aluno.pontos,
+                nivel: calcularNivel(aluno.pontos) // Usa a função que já criámos antes
+            };
+        });
+
+        res.json(ranking);
+    });
+});
+
 // INICIANDO O SERVIDOR
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
