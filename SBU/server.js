@@ -7,7 +7,7 @@ const port = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-//Configuração das pastas (Rotas estáticas)
+// Configuração das pastas (Rotas estáticas)
 app.use('/aluno', express.static('Aluno'));
 app.use('/biblio', express.static('Bibliotecario'));
 app.use('/totem', express.static('Totem'));
