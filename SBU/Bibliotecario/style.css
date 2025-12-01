@@ -1,17 +1,20 @@
+/* --- CONFIGURAÇÕES GERAIS --- */
 body {
-    font-family: 'Georgia', serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Fonte mais moderna */
     margin: 0;
     padding: 0;
     text-align: center;
-    background-color: #f8f8f8;
+    background-color: #f4f4f9; /* Fundo ligeiramente mais suave */
     color: #333;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
 }
 
+/* --- CABEÇALHO --- */
 .logo {
-    margin: 0px 0 0px 0;
+    margin: 20px 0;
 }
 
 .logo img {
@@ -20,26 +23,27 @@ body {
 }
 
 .linha-colorida {
-    width: 97%;
+    width: 100%;
     height: 5px;
     background: linear-gradient(90deg, #0055A4, #FFD700, #FF0000);
-    border-radius: 4px;
 }
 
+/* --- PÁGINA INICIAL (MENU) --- */
 .texto-principal {
-    margin-top: 80px;
+    margin-top: 60px;
+    padding: 0 20px;
 }
 
 .texto-principal h1 {
-    font-size: 42px;
-    color: #222;
+    font-size: 36px;
+    color: #2c3e50;
     margin-bottom: 15px;
 }
 
 .texto-principal p {
-    font-size: 20px;
-    color: #555;
-    max-width: 850px;
+    font-size: 18px;
+    color: #7f8c8d;
+    max-width: 800px;
     margin: 0 auto;
     line-height: 1.6;
 }
@@ -47,182 +51,230 @@ body {
 .botoes {
     display: flex;
     justify-content: center;
-    gap: 200px;
-    margin: 100px 0;
+    gap: 30px; /* Gap ajustado para não ficar muito espaçado */
+    margin: 60px 0;
+    flex-wrap: wrap; /* Para funcionar em telemóveis */
+    padding: 0 20px;
 }
 
 .botoes a {
-    flex: 2;
-    max-width: 250px;
-    min-width: 180px;
-    padding: 45px 0;
+    flex: 1;
+    min-width: 200px;
+    max-width: 280px;
+    padding: 40px 20px;
     font-size: 18px;
     border: none;
-    border-radius: 20px;
+    border-radius: 15px;
     cursor: pointer;
+    text-decoration: none;
     transition: all 0.3s ease;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     font-weight: bold;
 }
 
-.btn1 {
-    background-color: #3498db;
-    color: white;
-}
-.btn1:hover {
-    background-color: #2980b9;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
+.btn1 { background-color: #3498db; color: white; }
+.btn1:hover { background-color: #2980b9; transform: translateY(-5px); }
 
-.btn2 {
-    background-color: #f1c40f;
-    color: white;
-}
-.btn2:hover {
-    background-color: #d4ac0d;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
+.btn2 { background-color: #f1c40f; color: white; }
+.btn2:hover { background-color: #d4ac0d; transform: translateY(-5px); }
 
-.btn3 {
-    background-color: #2ecc71;
-    color: white;
-}
-.btn3:hover {
-    background-color: #27ae60;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
+.btn3 { background-color: #2ecc71; color: white; }
+.btn3:hover { background-color: #27ae60; transform: translateY(-5px); }
 
-.btn-consultar {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    background: linear-gradient(to right, #004e98, #00b87c);
-    transition: 0.3s;
-    margin-top: 10px;
-}
 
-.btn-consultar:hover {
-    opacity: 0.9;
-}
-
+/* --- CONTAINER PRINCIPAL (CARTÃO) --- */
+/* Usado no Cadastro e nas Consultas */
 .cadastro-container {
     background: white;
     width: 90%;
-    max-width: 700px;
-    margin-top: 40px;
-    padding: 40px 40px;
-    border-radius: 20px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    max-width: 800px; /* Largura boa para formulários e tabelas */
+    margin: 40px auto;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Sombra estilo "Totem" */
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .cadastro-container h1 {
-    font-size: 32px;
-    color: #222;
+    font-size: 28px;
+    color: #2c3e50;
     margin-bottom: 10px;
 }
 
 .cadastro-container p {
-    font-size: 16px;
-    color: #555;
+    font-size: 15px;
+    color: #7f8c8d;
     margin-bottom: 30px;
 }
 
-.formulario-cadastro {
+/* --- ESTILOS DE FORMULÁRIO (ESTILO TOTEM) --- */
+
+/* Grid para organizar inputs (2 por linha em telas grandes) */
+.form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px 25px;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
     text-align: left;
+    margin-bottom: 30px;
 }
 
-.formulario-cadastro .grupo {
+/* Inputs e Labels */
+.grupo {
     display: flex;
     flex-direction: column;
+    text-align: left;
+    margin-bottom: 15px;
 }
 
-.formulario-cadastro label {
+.grupo label {
     font-weight: bold;
     font-size: 14px;
-    color: #333;
-    margin-bottom: 5px;
+    color: #2c3e50;
+    margin-bottom: 8px;
 }
 
-.formulario-cadastro input {
-    padding: 10px 12px;
-    border: 1.5px solid #ccc;
-    border-radius: 10px;
-    font-size: 14px;
-    transition: all 0.3s ease;
+.grupo input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
 }
 
-.formulario-cadastro input:focus {
-    border-color: #0055A4;
-    box-shadow: 0 0 6px rgba(0,85,164,0.3);
+.grupo input:focus {
+    border-color: #3498db;
     outline: none;
 }
 
-.formulario-cadastro button {
-    grid-column: 1 / span 2;
-    margin-top: 20px;
-    padding: 12px;
+/* Botão de Ação Principal (Verde) */
+.btn-cadastrar {
+    width: 100%;
+    padding: 15px;
     font-size: 16px;
     font-weight: bold;
     color: white;
-    background: linear-gradient(90deg, #0055A4, #2ecc71);
+    background-color: #27ae60;
     border: none;
-    border-radius: 12px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s, transform 0.2s;
 }
 
-.formulario-cadastro button:hover {
+.btn-cadastrar:hover {
+    background-color: #219150;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-.titulo-form {
-    font-size: 32px;
-    color: #222;
-    margin-bottom: 10px;
-}
-
-.subtitulo {
-    font-size: 16px;
-    color: #555;
-    margin-bottom: 30px;
-}
-
-.form-consulta {
-    max-width: 350px;
-    margin: auto;
-    text-align: left;
-}
-
-.form-consulta .grupo {
-    margin-bottom: 25px;
-}
-
-.form-consulta label {
-    font-size: 16px;
+/* Link de Voltar */
+.voltar-link {
+    display: block;
+    margin-top: 25px;
+    text-decoration: none;
+    color: #7f8c8d;
+    font-size: 14px;
     font-weight: bold;
 }
+.voltar-link:hover { color: #3498db; }
 
-.form-consulta input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1.5px solid #ccc;
-    font-size: 15px;
+
+/* --- ESTILOS DO PAINEL DE CONSULTA (TABELAS E ABAS) --- */
+
+/* Abas de Navegação */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
 }
 
-.form-consulta input:focus {
-    border-color: #0055A4;
-    outline: none;
+.tab-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.tab-btn:hover { background-color: #dcdcdc; }
+
+.tab-btn.active-btn {
+    background-color: #3498db; /* Azul */
+    color: white;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+
+/* Container da Tabela */
+.tabela-container {
+    margin-top: 20px;
+    overflow-x: auto; /* Permite scroll horizontal se a tabela for grande */
+    display: none; /* JS controla qual aparece */
+}
+
+.ativo { display: block; }
+
+/* Tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+tbody tr:hover { background-color: #f8f9fa; }
+
+/* Status Coloridos */
+.status-devolvido { 
+    color: #27ae60; 
+    font-weight: bold; 
+    background: #e8f6f3; 
+    padding: 5px 10px; 
+    border-radius: 15px; 
+    font-size: 12px;
+}
+
+.status-emprestado { 
+    color: #e67e22; 
+    font-weight: bold; 
+    background: #fdf2e9; 
+    padding: 5px 10px; 
+    border-radius: 15px; 
+    font-size: 12px;
+}
+
+.aviso-vazio {
+    text-align: center;
+    color: #95a5a6;
+    margin-top: 30px;
+    font-style: italic;
+}
+
+/* Responsividade para telemóveis */
+@media (max-width: 600px) {
+    .form-grid { grid-template-columns: 1fr; } /* Coluna única no mobile */
+    .botoes { gap: 15px; }
+    .cadastro-container { width: 95%; padding: 25px; }
 }

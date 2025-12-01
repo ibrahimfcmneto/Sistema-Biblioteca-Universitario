@@ -3,37 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Relatório de Empréstimos</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Consultas - Biblioteca</title>
   
-  <style>
-    /* Estilo exclusivo para a tabela dessa página */
-    .tabela-container {
-        margin-top: 20px;
-        overflow-x: auto;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-    }
-    th, td {
-        padding: 12px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
-    }
-    th {
-        background-color: #004aad; /* Azul da PUC */
-        color: white;
-    }
-    tr:hover { background-color: #f1f1f1; }
-    .aviso-vazio {
-        text-align: center;
-        color: #666;
-        font-style: italic;
-        margin-top: 20px;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -43,66 +15,162 @@
 
   <div class="linha-colorida"></div>
 
-  <div class="cadastro-container" style="max-width: 900px;">
+  <div class="cadastro-container" style="max-width: 1000px;">
 
-    <h1 class="titulo-form">Livros Pendentes de Devolução</h1>
-    <p class="subtitulo">Abaixo estão os alunos que retiraram livros e ainda não devolveram.</p>
+    <h1 class="titulo-form">Painel de Consultas</h1>
+    <p class="subtitulo">Selecione abaixo o tipo de relatório que deseja visualizar.</p>
 
-    <div class="tabela-container">
-        <table id="tabela-pendencias">
+    <div class="tabs">
+        <button class="tab-btn active-btn" onclick="abrirAba('pendentes')">Pendentes ⚠️</button>
+        <button class="tab-btn" onclick="abrirAba('acervo')">Todos os Livros 📚</button>
+        <button class="tab-btn" onclick="abrirAba('historico')">Histórico de Empréstimos 📋</button>
+    </div>
+
+    <div id="pendentes" class="tabela-container ativo">
+        <h3>Livros Não Devolvidos</h3>
+        <table>
             <thead>
                 <tr>
                     <th>Aluno</th>
                     <th>RA</th>
                     <th>Livro</th>
-                    <th>Retirado em</th>
+                    <th>Data Retirada</th>
                 </tr>
             </thead>
-            <tbody>
-                </tbody>
+            <tbody id="lista-pendentes"></tbody>
         </table>
-        
-        <p id="msg-vazio" class="aviso-vazio">Carregando dados...</p>
+        <p id="msg-pendentes" class="aviso-vazio">Carregando...</p>
+    </div>
+
+    <div id="acervo" class="tabela-container">
+        <h3>Acervo Completo da Biblioteca</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cód.</th>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Estoque (Disp./Total)</th>
+                </tr>
+            </thead>
+            <tbody id="lista-acervo"></tbody>
+        </table>
+        <p id="msg-acervo" class="aviso-vazio">Carregando...</p>
+    </div>
+
+    <div id="historico" class="tabela-container">
+        <h3>Histórico Geral de Movimentações</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Aluno</th>
+                    <th>Livro</th>
+                    <th>Retirada</th>
+                    <th>Devolução</th>
+                </tr>
+            </thead>
+            <tbody id="lista-historico"></tbody>
+        </table>
+        <p id="msg-historico" class="aviso-vazio">Carregando...</p>
     </div>
 
     <br><br>
     <div style="text-align: center;">
-        <a href="index.html" style="color: #333; text-decoration: none; font-weight: bold;">Voltar ao Menu</a>
+        <a href="index.html" style="color: #333; text-decoration: none; font-weight: bold;">← Voltar ao Menu</a>
     </div>
 
   </div>
 
   <script>
-    fetch('/biblio-listar-pendencias')
-        .then(response => response.json())
-        .then(dados => {
-            const tbody = document.querySelector('#tabela-pendencias tbody');
-            const msgVazio = document.getElementById('msg-vazio');
+    // --- FUNÇÃO PARA TROCAR DE ABA ---
+    function abrirAba(idAba) {
+        document.querySelectorAll('.tabela-container').forEach(div => div.classList.remove('ativo'));
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-btn'));
 
-            msgVazio.innerText = "";
+        document.getElementById(idAba).classList.add('ativo');
+        event.target.classList.add('active-btn');
 
-            if (dados.length === 0) {
-                msgVazio.innerText = "Nenhum empréstimo pendente no momento.";
-                return;
-            }
+        if(idAba === 'pendentes') carregarPendentes();
+        if(idAba === 'acervo') carregarAcervo();
+        if(idAba === 'historico') carregarHistorico();
+    }
 
-            
-            dados.forEach(item => {
-                const linha = `
-                    <tr>
-                        <td>${item.nome_aluno}</td>
-                        <td>${item.ra_aluno}</td>
-                        <td>${item.nome_livro} <br><small style="color:gray">(${item.codigo_livro})</small></td>
-                        <td>${item.data_saida}</td>
-                    </tr>
-                `;
-                tbody.innerHTML += linha;
+    // 1. CARREGAR PENDÊNCIAS
+    function carregarPendentes() {
+        fetch('/biblio-listar-pendencias')
+            .then(res => res.json())
+            .then(dados => {
+                const tbody = document.getElementById('lista-pendentes');
+                const msg = document.getElementById('msg-pendentes');
+                tbody.innerHTML = '';
+                msg.innerText = dados.length === 0 ? "Tudo certo! Nenhuma pendência." : "";
+
+                dados.forEach(item => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${item.nome_aluno}</td>
+                            <td>${item.ra_aluno}</td>
+                            <td>${item.nome_livro}</td>
+                            <td style="color:#e74c3c; font-weight:bold;">${item.data_saida}</td>
+                        </tr>`;
+                });
             });
-        })
-        .catch(erro => {
-            console.error('Erro:', erro);
-            document.getElementById('msg-vazio').innerText = "Erro ao carregar a lista.";
-        });
+    }
+
+    // 2. CARREGAR ACERVO
+    function carregarAcervo() {
+        fetch('/listar-todos-livros')
+            .then(res => res.json())
+            .then(dados => {
+                const tbody = document.getElementById('lista-acervo');
+                const msg = document.getElementById('msg-acervo');
+                tbody.innerHTML = '';
+                msg.innerText = dados.length === 0 ? "Nenhum livro cadastrado." : "";
+
+                dados.forEach(livro => {
+                    const corEstoque = livro.quantidade_disponivel > 0 ? '#27ae60' : '#c0392b';
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${livro.codigo_livro}</td>
+                            <td><strong>${livro.titulo}</strong></td>
+                            <td>${livro.autor || '-'}</td>
+                            <td style="color:${corEstoque}; font-weight:bold;">
+                                ${livro.quantidade_disponivel} / ${livro.quantidade_total}
+                            </td>
+                        </tr>`;
+                });
+            });
+    }
+
+    // 3. CARREGAR HISTÓRICO
+    function carregarHistorico() {
+        fetch('/biblio-todos-emprestimos')
+            .then(res => res.json())
+            .then(dados => {
+                const tbody = document.getElementById('lista-historico');
+                const msg = document.getElementById('msg-historico');
+                tbody.innerHTML = '';
+                msg.innerText = dados.length === 0 ? "Nenhum histórico encontrado." : "";
+
+                dados.forEach(item => {
+                    const classeStatus = item.status === 'Devolvido' ? 'status-devolvido' : 'status-emprestado';
+                    const dataDev = item.data_devolucao || '---';
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><span class="${classeStatus}">${item.status}</span></td>
+                            <td>${item.nome_aluno}</td>
+                            <td>${item.nome_livro}</td>
+                            <td>${item.data_saida}</td>
+                            <td>${dataDev}</td>
+                        </tr>`;
+                });
+            });
+    }
+
+    window.onload = carregarPendentes;
   </script>
 
 </body>

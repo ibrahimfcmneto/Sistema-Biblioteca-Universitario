@@ -361,6 +361,31 @@ app.get('/listar-todos-livros', (req, res) => {
     });
 });
 
+// --- ROTA DE HISTÓRICO COMPLETO (BIBLIOTECÁRIO) ---
+app.get('/biblio-todos-emprestimos', (req, res) => {
+    const sql = `
+        SELECT 
+            A.nome AS nome_aluno,
+            A.ra AS ra_aluno,
+            L.titulo AS nome_livro,
+            DATE_FORMAT(E.data_emprestimo, '%d/%m/%Y %H:%i') AS data_saida,
+            DATE_FORMAT(E.data_devolucao_real, '%d/%m/%Y %H:%i') AS data_devolucao,
+            E.status
+        FROM Emprestimos AS E
+        JOIN Alunos AS A ON E.ra_aluno = A.ra
+        JOIN Livros AS L ON E.codigo_livro = L.codigo_livro
+        ORDER BY E.data_emprestimo DESC
+    `;
+
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ erro: 'Erro ao buscar histórico' });
+        }
+        res.json(results);
+    });
+});
+
 // INICIANDO O SERVIDOR
 app.listen(port, () => {
     console.log(`Servidor rodando em http://localhost:${port}`);
